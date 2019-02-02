@@ -1,0 +1,52 @@
+#!/bin/bash
+
+echo "====================================="
+echo "Compiling Isometric Demo on: "
+date
+
+## The directory of the project:
+DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+cd "$DIR_PATH";
+
+mkdir -p builds
+
+## The name given to the output of the build:
+OUTPUT="-o builds/IsoDemo"
+
+## This automatically adds new file to the build:
+C_FILES="$DIR_PATH/src/*.c"
+CC_FILES="$DIR_PATH/src/*.cc"
+CPP_FILES="$DIR_PATH/src/*.cpp"
+OBJC_FILES="$DIR_PATH/src/*.m"
+OBJCPP_FILES="$DIR_PATH/src/*.mm"
+
+## This is where new libraries & frameworks are added to the build:
+LIBS="-framework Cocoa -framework OpenGL -l freetype "
+INCLUDE_PATH="-I $DIR_PATH/libs/include"
+LIB_PATH="-L $DIR_PATH/libs"
+
+## This is the search path for dynamic libraries:
+R_PATH="-rpath @loader_path/../libs"
+
+## These are the warnings to ignore / enable:
+WARNINGS="-Wno-c++11-narrowing"
+
+## "-Ofast" Doing an optimized build takes a lot more time.
+OPTIMIZATIONS="-O0" 
+
+# -DBUILD_FOR_APP_BUNDLE
+
+start=$(date +%s)
+if clang++ -std=c++11 -arch x86_64 $OPTIMIZATIONS $WARNINGS $R_PATH $LIBS $LIB_PATH $INCLUDE_PATH $OBJCPP_FILES $CPP_FILES $OUTPUT; then 
+	end=$(date +%s)
+	echo "Build Time: $(($end-$start)) sec ($OPTIMIZATIONS)"
+	echo "========== Success ==========";
+	echo "";
+	exit 0;
+else 
+	echo "========== Failed ==========";
+	echo "";
+	exit 1;
+fi
+
+

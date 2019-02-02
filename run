@@ -1,0 +1,15 @@
+#!/bin/bash
+
+DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+cd "$DIR_PATH";
+
+if ./build; then
+	echo "-----------------------------------"
+	echo "Running..."
+	./builds/IsoDemo
+	echo "-----------------------------"
+	echo ""
+fi
+
+
+
